@@ -9,7 +9,7 @@ class Project(models.Model):
     slug = models.SlugField(unique=True)
     date_created = models.DateField(auto_now_add=True)
     description = models.TextField()
-    photo = models.ImageField(upload_to='project_photos/', null=True, blank=True)
+    photo = models.ImageField(upload_to='project_photos/')
     categories = models.ManyToManyField(Category)
 
     def __str__(self):
