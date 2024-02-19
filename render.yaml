@@ -9,3 +9,7 @@ services:
     startCommand: gunicorn --bind 0.0.0.0:$PORT marc_platform.wsgi:application
     healthCheckPath: /health-check
     httpPort: 8000
+
+
+static_build_command: "python manage.py collectstatic --noinput"
+static_build_path: "staticfiles"
