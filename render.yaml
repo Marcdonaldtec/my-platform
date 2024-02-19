@@ -1,7 +1,8 @@
 
 staticDirs:
   - static
-
+static_build_command: "python manage.py collectstatic --noinput"
+static_build_path: "static"
 services:
   - name: web
     env: python=3.12.0
@@ -11,5 +12,4 @@ services:
     httpPort: 8000
 
 
-static_build_command: "python manage.py collectstatic --noinput"
-static_build_path: "staticfiles"
+
