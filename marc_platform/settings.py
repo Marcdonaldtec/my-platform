@@ -49,7 +49,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -127,15 +126,37 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [BASE_DIR / "static"]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR / "media")
+
+
+AWS_ACCESS_KEY_ID = 'AKIATPRQOVAGVNTCOI64'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'mybucketawsformediafiles'
+AWS_S3_REGION_NAME = 'us-east-2'  # par exemple, 'us-east-1'
+
+# Configurations supplémentaires
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',  # Cache pendant 24 heures
+}
+
+# Stockage statique (CSS, JavaScript, etc.)
+AWS_LOCATION = 'static'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Stockage des fichiers médias (images, vidéos, etc.)
+AWS_PUBLIC_MEDIA_LOCATION = 'media/public'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_PUBLIC_MEDIA_LOCATION}/'
+
 
 
 # Default primary key field type
@@ -153,3 +174,11 @@ if DEBUG:
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
+
+
+if DEBUG:
+    # Utilisez le stockage local pour les fichiers statiques et médias en développement
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    STATICFILES_DIRS = [BASE_DIR / "static"]
+    MEDIA_ROOT = BASE_DIR / "media"
