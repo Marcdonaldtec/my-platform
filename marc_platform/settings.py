@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-
+from storages.backends.s3boto3 import S3Boto3Storage
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,11 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9)%zg00o*(7+%kakp-u!c7kb0bgnn*3m-qw!g&u3q0e+*4eu$)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['.onrender.com']
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['.onrender.com']
 
 
 INSTALLED_APPS = [
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    
+
 ]
 
 ROOT_URLCONF = 'marc_platform.urls'
@@ -132,29 +132,37 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR / "media")
 
 
+class S3StaticStorage(S3Boto3Storage):
+    location = 'static'
+    default_acl = 'public-read'
+
+
+class S3PublicMediaStorage(S3Boto3Storage):
+    location = 'media/public'
+    default_acl = 'public-read'
+
+
+# Paramètres AWS
 AWS_ACCESS_KEY_ID = 'AKIATPRQOVAGVNTCOI64'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'mybucketawsformediafiles'
 AWS_S3_REGION_NAME = 'us-east-1'  # par exemple, 'us-east-1'
 
-# Configurations supplémentaires
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',  # Cache pendant 24 heures
-}
+# Configurations statiques
+STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
+STATICFILES_STORAGE = 'marc_platform.settings.S3StaticStorage'
 
-# Stockage statique (CSS, JavaScript, etc.)
-AWS_LOCATION = 'static'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# Configurations médias
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/public/'
+DEFAULT_FILE_STORAGE = 'marc_platform.settings.S3PublicMediaStorage'
 
-# Stockage des fichiers médias (images, vidéos, etc.)
-AWS_PUBLIC_MEDIA_LOCATION = 'media/public'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_PUBLIC_MEDIA_LOCATION}/'
 
+
+
+# Ajoutez ces configurations si vous souhaitez activer HSTS
 SECURE_HSTS_SECONDS = 31536000
-
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
