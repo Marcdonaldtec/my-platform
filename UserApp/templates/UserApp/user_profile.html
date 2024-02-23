@@ -13,18 +13,6 @@
     <p class="animate__animated animate__fadeInUp"><strong>Email:</strong> {{ user_profile.email }}</p>
     <p class="animate__animated animate__fadeInUp"><strong>Phone:</strong> {{ user_profile.phone }}</p>
   </div>
-  {% if user.is_authenticated %}
-  <p class="animate__animated animate__fadeInUp">Hello, {{ user.username }}!
-      <span class="text-muted">|</span> <a href="{% url 'AuthenticationApp:logout' %}" class="animate__animated animate__fadeInUp animate__delay-1s">Logout</a>
-      <span class="text-muted">|</span> {% if user.userprofile %}
-          <a href="{% url 'UserApp:edit_profile' %}" class="btn btn-info btn-sm animate__animated animate__fadeInUp animate__delay-2s">Edit Profile</a>
-      {% else %}
-          <a href="{% url 'UserApp:create_profile' %}" class="btn btn-success btn-sm animate__animated animate__fadeInUp animate__delay-2s">Create Profile</a>
-      {% endif %}
-  </p>
-{% else %}
-  <p class="animate__animated animate__fadeInUp animate__delay-1s"><a href="{% url 'AuthenticationApp:login' %}" class="btn btn-primary">Login</a></p>
-{% endif %}
   <div class="mb-10"></div>
   {% if user_profile.project_set.all %}
   <h2 class="animate__animated animate__fadeInUp animate__delay-1s">Projects</h2>
