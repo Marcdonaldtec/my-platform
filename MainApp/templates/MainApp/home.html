@@ -4,7 +4,7 @@
 <div class="container mt-5 animate__animated animate__fadeIn">
     <h1 class="display-4 animate__animated animate__bounce">Welcome to the Portfolio Platform</h1>
 
-    {% if user.is_authenticated %}
+    <!-- {% if user.is_authenticated %}
         <p class="animate__animated animate__fadeInUp">Hello, {{ user.username }}!
             <span class="text-muted">|</span> <a href="{% url 'AuthenticationApp:logout' %}" class="animate__animated animate__fadeInUp animate__delay-1s">Logout</a>
             <span class="text-muted">|</span> {% if user.userprofile %}
@@ -15,7 +15,7 @@
         </p>
     {% else %}
         <p class="animate__animated animate__fadeInUp animate__delay-1s"><a href="{% url 'AuthenticationApp:login' %}" class="btn btn-primary">Login</a></p>
-    {% endif %}
+    {% endif %} -->
 
     <h2 class="mt-4 animate__animated animate__fadeInUp animate__delay-3s">Recent Users</h2>
     <ul class="list-group animate__animated animate__fadeInUp animate__delay-4s">
