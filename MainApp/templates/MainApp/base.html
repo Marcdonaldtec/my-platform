@@ -17,10 +17,22 @@
         width: 20%;
         height: auto;
     }
+
+    .navbar {
+        transition: background-color 0.3s ease;
+    }
+
+    .navbar-light {
+        background-color: #f8f9fa; /* Set the initial background color */
+    }
+
+    .navbar-light.scrolled {
+        background-color: #007bff; /* Change background color on scroll */
+    }
 </style>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="/"><img src="{% static 'images/myLogo1.png' %}" alt="marcdonaldtech"
                     class="logo"></a>
@@ -34,17 +46,18 @@
                         <a class="nav-link" href="{% url 'CategoryApp:all_categories' %}">All Projects Categories</a>
                     </li>
                     {% if user.is_authenticated %}
-                    <div class="d-flex align-items-start">
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                href="{% url 'UserApp:user_profile' username=request.user.username %}"><img
-                                    src="{{ user_profile.photo.url }}" alt="User Photo" class="profile-image-navBar"
-                                    data-lightbox="user-profile"> {{ user.username }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'AuthenticationApp:logout' %}">Logout</a>
-                        </li>
-                    </div>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{ user_profile.photo.url }}" alt="User Photo" class="profile-image-navBar"
+                                data-lightbox="user-profile"> {{ user.username }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="{% url 'AuthenticationApp:logout' %}">Logout</a>
+                            <a class="dropdown-item"
+                                href="{% url 'UserApp:user_profile' username=request.user.username %}">Profile</a>
+                        </div>
+                    </li>
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'AuthenticationApp:login' %}">Login</a>
@@ -69,7 +82,6 @@
             <div class="text-center">
                 <a href="{% url 'ProjectApp:create_project' %}" class="ml-auto">Add a project</a>
             </div>
-
         </div>
     </footer>
 
@@ -79,8 +91,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"
         integrity="sha512-RgF9eRwYYSDP6JiJnQOpr8K36SDceK66WO5A2H2j/Vq+TtaIQcQOL+C2oqaADu82GR1y1Nzl9MvCEAmQpF7E8A=="
         crossorigin="anonymous">
-        </script>
-    <script> lightbox.init();</script>
+    </script>
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Change navbar background color on scroll
+        window.onscroll = function () {
+            var navbar = document.querySelector('.navbar');
+            if (navbar) {
+                if (window.scrollY > 10) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            }
+        };
+    </script>
+
 </body>
 
 </html>

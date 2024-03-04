@@ -1,27 +1,40 @@
 {% extends 'MainApp/base.html' %}
 {% block title %}Welcome to the Portfolio Platform{% endblock %}
 {% block content %}
-<div class="container mt-5 animate__animated animate__fadeIn">
+<div class="container mt-5 hero-section">
     <h1 class="display-4 animate__animated animate__bounce">Welcome to the Portfolio Platform</h1>
 
     {% if user.is_authenticated %}
-        <p class="animate__animated animate__fadeInUp">Hello, {{ user.username }}!
-            <span class="text-muted">|</span> <a href="{% url 'AuthenticationApp:logout' %}" class="animate__animated animate__fadeInUp animate__delay-1s">Logout</a>
-            <span class="text-muted">|</span> {% if user.userprofile %}
+        <p class="animate__animated animate__fadeInUp">
+            Hello, {{ user.username }}!
+            <span class="text-muted">|</span>
+            <a href="{% url 'AuthenticationApp:logout' %}" class="animate__animated animate__fadeInUp animate__delay-1s">Logout</a>
+            <span class="text-muted">|</span>
+            {% if user.userprofile %}
                 <a href="{% url 'UserApp:edit_profile' %}" class="btn btn-info btn-sm animate__animated animate__fadeInUp animate__delay-2s">Edit Profile</a>
             {% else %}
                 <a href="{% url 'UserApp:create_profile' %}" class="btn btn-success btn-sm animate__animated animate__fadeInUp animate__delay-2s">Create Profile</a>
             {% endif %}
         </p>
     {% else %}
-        <p class="animate__animated animate__fadeInUp animate__delay-1s"><a href="{% url 'AuthenticationApp:login' %}" class="btn btn-primary">Login</a></p>
+        <p class="animate__animated animate__fadeInUp animate__delay-1s">
+            <a href="{% url 'AuthenticationApp:login' %}" class="btn btn-primary btn-lg">Get Started</a>
+        </p>
     {% endif %}
+</div>
 
+<div class="container mt-5">
     <h2 class="mt-4 animate__animated animate__fadeInUp animate__delay-3s">Recent Users</h2>
-    <ul class="list-group animate__animated animate__fadeInUp animate__delay-4s">
+    <div class="card-deck">
         {% for user_profile in users %}
-            <li class="list-group-item"><a href="{% url 'UserApp:user_profile' user_profile.user.username %}">{{ user_profile.user.username }}</a></li>
+            <div class="card animate__animated animate__fadeInUp animate__delay-4s">
+                <img src="{{ user_profile.photo.url }}" class="card-img-top" alt="{{ user_profile.user.username }} Photo">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user_profile.user.username }}</h5>
+                    <a href="{% url 'UserApp:user_profile' user_profile.user.username %}" class="btn btn-primary">View Profile</a>
+                </div>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 </div>
 {% endblock %}
