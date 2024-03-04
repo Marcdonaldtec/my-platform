@@ -125,39 +125,9 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR / "media")
-
-
-class S3StaticStorage(S3Boto3Storage):
-    location = 'static'
-    default_acl = 'public-read'
-
-
-class S3PublicMediaStorage(S3Boto3Storage):
-    location = 'media/public'
-    default_acl = 'public-read'
-
-
-# Paramètres AWS
-AWS_ACCESS_KEY_ID = 'AKIATPRQOVAGVNTCOI64'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'mybucketawsformediafiles'
-AWS_S3_REGION_NAME = 'us-east-1'  # par exemple, 'us-east-1'
-
-# Configurations statiques
-STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
-STATICFILES_STORAGE = 'marc_platform.settings.S3StaticStorage'
-
-# Configurations médias
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/public/'
-DEFAULT_FILE_STORAGE = 'marc_platform.settings.S3PublicMediaStorage'
-
-
-
+STATICFILES_DIRS = [BASE_DIR / "static"]
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Ajoutez ces configurations si vous souhaitez activer HSTS
 SECURE_HSTS_SECONDS = 31536000
@@ -169,9 +139,23 @@ SECURE_HSTS_PRELOAD = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-if DEBUG:
-    # Utilisez le stockage local pour les fichiers statiques et médias en développement
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'
-    STATICFILES_DIRS = [BASE_DIR / "static"]
-    MEDIA_ROOT = BASE_DIR / "media"
+
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = 'public-read'
+
+# Utilisez le backend de stockage S3 pour les fichiers statiques
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# Utilisez le backend de stockage S3 pour les fichiers médias
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = 'AKIATPRQOVAGVNTCOI64'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'mybucketawsformediafiles'
+AWS_S3_REGION_NAME = 'us-east-1'  
+
+# Réglez l'URL pour les fichiers statiques et les fichiers médias
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+
