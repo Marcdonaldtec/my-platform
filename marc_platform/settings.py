@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
+
 import dj_database_url
 from pathlib import Path
 import os
@@ -26,8 +28,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-# DEBUG = False
-DEBUG = os.environ.get("DEBUG", "False").lower()==True
+DEBUG = False
+# DEBUG = os.environ.get("DEBUG", "False").lower()==True 
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
@@ -85,18 +87,19 @@ WSGI_APPLICATION = 'marc_platform.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_platform',
-        'USER': 'postgres',
-        'PASSWORD': 'Dodo4023',
-        'HOST': 'localhost',  # Set to the address of your PostgreSQL server
-        'PORT': '5432',       # Default PostgreSQL port
-    }
+    'default':dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'db_platform',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'Dodo4023',
+    #     'HOST': 'localhost',  # Set to the address of your PostgreSQL server
+    #     'PORT': '5432',       # Default PostgreSQL port
+    # }
 }
 
-database_url = os.environ.get("DATABASE_URL")
-DATABASES['default']= dj_database_url.parse(database_url)
+# database_url = os.environ.get("DATABASE_URL")
+# DATABASES['default']= dj_database_url.parse(database_url)
 # postgres://db_platform_user:qtEokyRJqPxivUYXTkzwOuenfF5Enk86@dpg-cnivr28l6cac739b7deg-a.oregon-postgres.render.com/db_platform
 
 # Password validation
