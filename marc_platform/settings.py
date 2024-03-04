@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import dj_database_url
 from pathlib import Path
 import os
 from storages.backends.s3boto3 import S3Boto3Storage
@@ -21,14 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9)%zg00o*(7+%kakp-u!c7kb0bgnn*3m-qw!g&u3q0e+*4eu$)'
+# SECRET_KEY = 'django-insecure-9)%zg00o*(7+%kakp-u!c7kb0bgnn*3m-qw!g&u3q0e+*4eu$)'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = False
-
+# DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False").lower()==True
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['.onrender.com']
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTS = ['.onrender.com']
 
 
 INSTALLED_APPS = [
@@ -83,11 +85,18 @@ WSGI_APPLICATION = 'marc_platform.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db_platform',
+        'USER': 'db_platform_user',
+        'PASSWORD': 'qtEokyRJqPxivUYXTkzwOuenfF5Enk86',
+        'HOST': 'dpg-cnivr28l6cac739b7deg-a',  # Set to the address of your PostgreSQL server
+        'PORT': '5432',       # Default PostgreSQL port
     }
 }
 
+database_url = os.environ.get("DATABASE_URL")
+DATABASES['default']= dj_database_url.parse(database_url)
+# postgres://db_platform_user:qtEokyRJqPxivUYXTkzwOuenfF5Enk86@dpg-cnivr28l6cac739b7deg-a.oregon-postgres.render.com/db_platform
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
