@@ -1,0 +1,18 @@
+{% extends 'MainApp/base.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>Settings</h1>
+
+  <h2>Personal Info</h2>
+  <form method="post" action="{% url 'UserApp:settings' %}">
+    {% csrf_token %}
+    {{ personal_info_form.as_p }}
+    <input type="hidden" name="form_name" value="personal_info">
+    <button type="submit" class="btn btn-primary">Update Personal Info</button>
+  </form>
+
+</div>
+{% endblock %}

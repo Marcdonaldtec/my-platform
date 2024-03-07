@@ -23,11 +23,11 @@
     }
 
     .navbar-light {
-        background-color: #f8f9fa; /* Set the initial background color */
+        background-color: #f8f9fa;
     }
 
     .navbar-light.scrolled {
-        background-color: #007bff; /* Change background color on scroll */
+        background-color: #007bff; 
     }
 </style>
 
@@ -56,6 +56,7 @@
                             <a class="dropdown-item" href="{% url 'AuthenticationApp:logout' %}">Logout</a>
                             <a class="dropdown-item"
                                 href="{% url 'UserApp:user_profile' username=request.user.username %}">Profile</a>
+                            <a class="dropdown-item" href="{% url 'UserApp:settings' %}">Settings</a>    
                         </div>
                     </li>
                     {% else %}
@@ -71,7 +72,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container mt-10">
         {% block content %}
         {% endblock %}
     </div>
