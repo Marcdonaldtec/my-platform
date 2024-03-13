@@ -32,8 +32,9 @@ DEBUG = False
 DEBUG = os.environ.get("DEBUG", "False").lower()==True 
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
-# ALLOWED_HOSTS = ['.onrender.com']
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = ['.marcdonaldtecheva.com']
+
 
 
 
